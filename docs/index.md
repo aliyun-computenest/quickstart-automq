@@ -1,131 +1,79 @@
-# Demo服务实例部署文档
+# AutoMQ for Kafka On-Prem 版服务使用文档
 
 ## 概述
+AutoMQ for Kafka On-Prem 版是 AutoMQ 基于云原生基础设施重新设计实现的新一代 Kafka 商业发行软件，支持在用户的 IDC 或公有云 VPC 等私有网络环境中私有化安装和自主管理。
 
-`(服务概述内容)`。
+在保持和 Apache Kafka 100% 兼容前提下，AutoMQ 可以为用户提供高达 10 倍的成本优势以及百倍的弹性优势，同时支持秒级分区迁移和流量自动重平衡，解决运维痛点。
 
-```
-eg：
+AutoMQ for Kafka On-Prem 版服务使用阿里云计算巢私有化部署方案，将 AutoMQ Kafka 软件部署到用户自定义的 VPC 和子网下，后续用户访问服务均位于自定义的私网内。
 
-Demo服务是计算巢提供的示例。
-本文向您介绍如何开通计算巢上的`Demo`服务，以及部署流程和使用说明。
-```
+AutoMQ for Kafka 同时还提供了全托管服务形态的 SaaS 版和 BYOC 版，详情请参考 [AutoMQ 官网](https://automq.com/)。
 
 ## 计费说明
 
-`(计费说明内容)`
+AutoMQ for Kafka On-Prem 版是将软件部署在用户账号下的机器资源上，因此用户使用 AutoMQ Kafka On-Prem 版需要为以下资源付费：
 
-```
-eg:
+**云资源费用，用户直接向阿里云支付**
 
-Demo在计算巢上的费用主要涉及：
+底层付费云资源主要包括：
+- ECS 机器：AutoMQ Kafka 需要 ECS 部署控制台和 Kafka 集群数据节点。
+- EBS 云盘：AutoMQ Kafka 需要少量的云盘存储服务端日志和基础元数据。
+- 公网费用（可选）：如果用户选择从公网访问控制台和服务，则可能会产生公网流量费用。
 
-- 所选vCPU与内存规格
-- 系统盘类型及容量
-- 公网带宽
+**软件服务费，用户向 AutoMQ 服务方支付**
 
-计费方式包括：
+AutoMQ Kafka 面向企业客户提供 On-Prem 版商业服务，因此会根据用户集群的使用量按量收费，收取一定的软件服务费。
 
-- 按量付费（小时）
-- 包年包月
+On-Prem 版计费方式目前支持：
 
-目前提供如下实例：
+- 按量付费（按小时出账）
+- 计费方式：按照 Kafka 集群所有节点消耗的总 vCPU 核数进行计费。
 
-| 规格族 | vCPU与内存 | 系统盘 | 公网带宽 |
-| --- | --- | --- | --- |
-| ecs.r6.xlarge | 内存型r6，4vCPU 32GiB | ESSD云盘 200GiB PL0 | 固定带宽1Mbps |
+**重要** AutoMQ Kafka On-Prem 版是通过云市场付费镜像方式付费，用户开通 Kafka 服务时不会计费，只有在 AutoMQ Kafka 控制台创建实例（集群）时才会真正按照数据节点的规模进行计费。
 
-预估费用在创建实例时可实时看到。
-如需更多规格、其他服务（如集群高可用性要求、企业级支持服务等），请联系我们 [mailto:xx@xx.com](mailto:xx@xx.com)。
 
-```
+目前AutoMQ Kafka On-Prem 版支持在如下 ECS 规格下部署服务：
+
+| 规格族           | vCPU与内存 | 系统盘 | 公网带宽 |
+|---------------| --- | --- | --- |
+| ecs.r7.xlarge | 内存型r6，2vCPU 16GiB | ESSD云盘 40GiB PL0 | 自定义按需 |
+
+如需更多规格、其他服务（如集群高可用性要求、企业级支持服务等），请 [联系我们](https://automq.com/)。
+
 
 ## 部署架构
+![部署架构](https://image.automq.com/20240131bot/bIJIzD.png)
 
-`(部署概述内容)`
-
-## RAM账号所需权限
-
-`(权限策略内容)`
-
-```
-eg: 
-
-Demo服务需要对ECS、VPC等资源进行访问和创建操作，若您使用RAM用户创建服务实例，需要在创建服务实例前，对使用的RAM用户的账号添加相应资源的权限。添加RAM权限的详细操作，请参见[为RAM用户授权](https://help.aliyun.com/document_detail/121945.html)。所需权限如下表所示。
+## 前置条件一：云账号拥有相关操作权限
+开通并使用 AutoMQ Kafka On-Prem 版服务，需要操作云账号具备如下权限：
+1. 创建授权策略、角色。
+2. 开通云市场商品。
+一般建议主账号或者具备管理权限的子账号进行操作。
 
 
-| 权限策略名称 | 备注 |
-| --- | --- |
-| AliyunECSFullAccess | 管理云服务器服务（ECS）的权限 |
+## 前置条件二：已经开通相关云服务依赖
+AutoMQ Kafka On-Prem 版依赖如下云产品，建议提前开通。
+1. [弹性计算 ECS](https://ecs.console.aliyun.com)。
+2. [对象存储 OSS](https://oss.console.aliyun.com)。
+4. [PrivateZone](https://dnsnext.console.aliyun.com)。
 
-```
+## 使用流程
+在上述前置条件满足的情况下，开通 AutoMQ Kafka On-Prem 版订阅服务。
 
-## 部署流程
+开通服务后，请前往 [AutoMQ On-Prem 版文档中心](https://docs.automq.com/zh/docs/automq-onperm/Dtv2wrUVPiBxc3kgs4cciWD4nQh) 查看详细的使用流程和操作说明。
 
-### 部署步骤
-
-`(部署步骤内容)`
-
-```
-eg:
-
-1. 单击部署链接，进入服务实例部署界面，根据界面提示，填写参数完成部署。
-2. 补充示意图。
-```
-### 部署参数说明
-
-`(部署参数说明内容)`
-
-```
-eg:
-
-您在创建服务实例的过程中，需要配置服务实例信息。下文介绍云XR实时渲染平台服务实例输入参数的详细信息。
-
-| 参数组 | 参数项 | 示例 | 说明 |
-| --- | --- | --- | --- |
-| 服务实例名称 |  | test | 实例的名称 |
-| 地域 |  | 华北2（北京） | 选中服务实例的地域，建议就近选中，以获取更好的网络延时。 |
-```
-
-### 验证结果
-
-`(验证结果内容)`
-
-```
-eg:
-
-1. 查看服务实例。服务实例创建成功后，部署时间大约需要2分钟。部署完成后，页面上可以看到对应的服务实例。 
-2. 通过服务实例访问TuGraph。进入到对应的服务实例后，可以在页面上获取到web、rpc、ssh共3种使用方式。
-```
-
-### 使用Demo
-
-`(服务使用说明内容)`
-
-```
-eg:
-
-请访问Demo官网了解如何使用：[使用文档](https://www.aliyun.com)
-```
-
-## 问题排查
-
-`(服务使用说明内容)`
-
-```
-eg:
-
-请访问[Demo的问题排查链接](https://www.aliyun.com)获取帮助。
-```
 
 ## 联系我们
+欢迎通过如下方式联系我们，了解更多信息。
 
-欢迎访问Demo官网（[https://www.aliyun.com](https://www.aliyun.com)）了解更多信息。
+💻 官网：https://www.automq.com
 
-联系邮箱：[https://www.aliyun.com](mailto:https://www.aliyun.com)
+💻 文档中心：https://docs.automq.com
 
-社区版开源地址：[https://github.com/](https://github.com/)
+🌟GitHub：https://github.com/AutoMQ/automq-for-kafka
 
-扫码关注微信公众号，技术博客、活动通知不容错过：
+👀 B站：AutoMQ官方账号
 
-`(添加二维码图片)`
+🔍 微信二维码：
+
+![二维码](https://image.automq.com/resource/qrcode.png)
