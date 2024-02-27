@@ -34,15 +34,15 @@ On-Prem 版计费方式目前支持：
 
 目前AutoMQ Kafka On-Prem 版支持在如下 ECS 规格下部署服务：
 
-| 规格族           | vCPU与内存 | 系统盘 | 公网带宽 |
-|---------------| --- | --- | --- |
-| ecs.r7.xlarge | 内存型r6，2vCPU 16GiB | ESSD云盘 40GiB PL0 | 自定义按需 |
+| 规格族           | vCPU与内存           | 系统盘 | 公网带宽 |
+|---------------|-------------------| --- | --- |
+| ecs.r7.xlarge | 内存型r7，2vCPU 16GiB | ESSD云盘 40GiB PL0 | 自定义按需 |
 
 如需更多规格、其他服务（如集群高可用性要求、企业级支持服务等），请 [联系我们](https://automq.com/)。
 
 
 ## 部署架构
-![部署架构](https://image.automq.com/20240131bot/bIJIzD.png)
+![部署架构](img.png)
 
 ## 前置条件一：云账号拥有相关操作权限
 开通并使用 AutoMQ Kafka On-Prem 版服务，需要操作云账号具备如下权限：
