@@ -76,4 +76,4 @@ AutoMQ Kafka On-Prem 版依赖如下云产品，建议提前开通。
 
 🔍 微信二维码：
 
-![二维码](https://image.automq.com/resource/qrcode.png)
+![二维码](qrcode.png)
