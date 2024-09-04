@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="计算巢是阿里云开放给企业应用服务商的服务管理平台。服务商能够在计算巢上发布私有化部署服务，为其客户提供云上软件一键部署的能力；同时也支持全托管模式的服务，赋能服务商托管其客户资源。">
+  <title>AutoMQ for Kafka BYOC 版服务使用文档 - Aliyun 计算巢 x Demo</title>
+
+  <link rel="shortcut icon" href="img/favicon.ico">
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  
+
+  
+
+  
+  
+
+  
+    <script src="search/main.js"></script>
+  
+
+  
+
+  <script src="js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-inner">
+        <div class="logo">
+          <img src="./img/logo-2x.png">
+        </div>
+        <div class="nav-list">
+          <ul>
+          
+              <li><a href="#automq-for-kafka-byoc">AutoMQ for Kafka BYOC 版服务使用文档</a></li>
+              
+                  <li><a href="#_1">概述</a></li>
+                  
+              
+                  <li><a href="#_2">计费说明</a></li>
+                  
+              
+                  <li><a href="#_3">部署架构</a></li>
+                  
+              
+                  <li><a href="#_4">前置条件一：云账号拥有相关操作权限</a></li>
+                  
+              
+                  <li><a href="#_5">前置条件二：已经开通相关云服务依赖</a></li>
+                  
+              
+                  <li><a href="#_6">使用流程</a></li>
+                  
+              
+                  <li><a href="#_7">联系我们</a></li>
+                  
+              
+          
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content theme-github">
+      
+      <div class="content-inner">        
+        
+        <h1 id="automq-for-kafka-byoc">AutoMQ for Kafka BYOC 版服务使用文档</h1>
+<h2 id="_1">概述</h2>
+<p>AutoMQ for Kafka BYOC 版是 AutoMQ 基于云原生基础设施重新设计实现的新一代 Kafka 商业发行软件，支持在公有云 VPC 私有网络环境中私有化安装和自主管理。</p>
+<p>在保持和 Apache Kafka 100% 兼容前提下，AutoMQ 可以为用户提供 50%+ 的成本优势以及百倍的弹性优势，同时支持秒级分区迁移和流量自动重平衡，解决运维痛点。</p>
+<p>AutoMQ for Kafka BYOC 版服务使用阿里云计算巢私有化部署方案，将 AutoMQ Kafka 软件部署到用户自定义的 VPC 和子网下，后续用户访问服务均位于自定义的私网内。</p>
+<p>AutoMQ for Kafka 同时还提供了全托管服务形态的 SaaS 版，详情请参考 <a href="https://automq.com/">AutoMQ 官网</a>。</p>
+<h2 id="_2">计费说明</h2>
+<p>AutoMQ for Kafka BYOC 版是将软件部署在用户账号下的机器资源上，因此用户使用 AutoMQ Kafka BYOC 版需要为以下资源付费：</p>
+<p><strong>云资源费用，用户直接向阿里云支付</strong></p>
+<p>底层付费云资源主要包括：
+- ECS 机器：AutoMQ Kafka 需要 ECS 部署控制台和 Kafka 集群数据节点。
+- EBS 云盘：AutoMQ Kafka 需要少量的云盘存储服务端日志和基础元数据。
+- OSS 存储：AutoMQ Kafka 使用 OSS 存储消息数据，因此会消耗 OSS 的存储空间和 API 调用。
+- 公网费用（可选）：如果用户选择从公网访问控制台和服务，则可能会产生公网流量费用。</p>
+<p><strong>软件服务费，用户向 AutoMQ 服务方支付</strong></p>
+<p>AutoMQ Kafka 面向企业客户提供 BYOC 版商业服务，因此会根据用户集群的使用量按量收费，收取一定的软件服务费。关于计费详情请<a href="https://docs.automq.com/zh/automq-cloud/subscriptions-and-billings/byoc-env-billings/billing-instructions-for-byoc">参考文档</a>。</p>
+<p>BYOC 版计费方式目前支持：</p>
+<ul>
+<li>按量付费（按小时出账）以及包年包月（按 License 规格收费）</li>
+<li>计费方式：按照集群的 AKU 处理规格计费。</li>
+</ul>
+<p><strong>重要</strong> AutoMQ Kafka BYOC 版仅对实际创建的集群进行收费，用户开通 Kafka 服务时不会计费，只有在 AutoMQ Kafka 控制台创建实例（集群）时才会真正按照集群的 AKU 规格进行计费。</p>
+<p>目前AutoMQ Kafka BYOC 版支持在如下 ECS 规格下部署服务：</p>
+<table>
+<thead>
+<tr>
+<th>规格族</th>
+<th>vCPU与内存</th>
+<th>系统盘</th>
+<th>公网带宽</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ecs.r7.large</td>
+<td>内存型r7，2vCPU 16GiB</td>
+<td>ESSD云盘 40GiB PL0</td>
+<td>自定义按需</td>
+</tr>
+<tr>
+<td>ecs.r6.large</td>
+<td>内存型r6，2vCPU 16GiB</td>
+<td>ESSD云盘 40GiB PL0</td>
+<td>自定义按需</td>
+</tr>
+<tr>
+<td>ecs.u1-c1m8.large</td>
+<td>通用算力 u1，2vCPU 16GiB</td>
+<td>ESSD云盘 40GiB PL0</td>
+<td>自定义按需</td>
+</tr>
+</tbody>
+</table>
+<p>如需更多规格、其他服务（如集群高可用性要求、企业级支持服务等），请 <a href="https://automq.com/">联系我们</a>。</p>
+<h2 id="_3">部署架构</h2>
+<p><img alt="部署架构" src="img.png" /></p>
+<h2 id="_4">前置条件一：云账号拥有相关操作权限</h2>
+<p>开通并使用 AutoMQ Kafka BYOC 版服务，需要操作云账号具备如下权限：
+1. 创建授权策略、角色。
+2. 开通云市场商品。
+一般建议主账号或者具备管理权限的子账号进行操作。</p>
+<h2 id="_5">前置条件二：已经开通相关云服务依赖</h2>
+<p>AutoMQ Kafka BYOC 版依赖如下云产品，建议提前开通。
+1. <a href="https://ecs.console.aliyun.com">弹性计算 ECS</a>。
+2. <a href="https://oss.console.aliyun.com">对象存储 OSS</a>。
+4. <a href="https://dnsnext.console.aliyun.com">PrivateZone</a>。</p>
+<h2 id="_6">使用流程</h2>
+<p>在上述前置条件满足的情况下，开通 AutoMQ Kafka BYOC 版订阅服务。</p>
+<p>开通服务后，请前往 <a href="https://docs.automq.com/zh/automq-cloud/getting-started/install-byoc-environment/alibaba-cloud">AutoMQ BYOC 版文档中心</a> 查看详细的使用流程和操作说明。</p>
+<h2 id="_7">联系我们</h2>
+<p>欢迎通过如下方式联系我们，了解更多信息。</p>
+<p>💻 官网：https://www.automq.com</p>
+<p>💻 文档中心：https://www.automq.com/docs</p>
+<p>🌟GitHub：https://github.com/AutoMQ/automq</p>
+<p>👀 B站：AutoMQ官方账号</p>
+<p>🔍 微信二维码：</p>
+<p><img alt="二维码" src="qrcode.png" /></p>
+        
+      </div>
+
+      <div class="copyrights">© 2009-2022 Aliyun.com 版权所有</div>
+    </div>
+  </div>
+  
+  <!--
+  MkDocs version      : 1.6.1
+  Docs Build Date UTC : 2024-09-04 02:03:56.011644+00:00
+  -->
+</body>
+</html>
