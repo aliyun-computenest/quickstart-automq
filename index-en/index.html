@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="计算巢是阿里云开放给企业应用服务商的服务管理平台。服务商能够在计算巢上发布私有化部署服务，为其客户提供云上软件一键部署的能力；同时也支持全托管模式的服务，赋能服务商托管其客户资源。">
+  <title>AutoMQ for Kafka BYOC Edition User Guide - Aliyun 计算巢 x Demo</title>
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+  <link rel="stylesheet" href="../css/theme.css">
+  
+
+  
+
+  
+  
+
+  
+    <script src="../search/main.js"></script>
+  
+
+  
+
+  <script src="../js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-inner">
+        <div class="logo">
+          <img src="./img/logo-2x.png">
+        </div>
+        <div class="nav-list">
+          <ul>
+          
+              <li><a href="#automq-for-kafka-byoc-edition-user-guide">AutoMQ for Kafka BYOC Edition User Guide</a></li>
+              
+                  <li><a href="#overview">Overview</a></li>
+                  
+              
+                  <li><a href="#billing-information">Billing Information</a></li>
+                  
+              
+                  <li><a href="#deployment-architecture">Deployment Architecture</a></li>
+                  
+              
+                  <li><a href="#prerequisite-1-cloud-account-permissions">Prerequisite 1: Cloud Account Permissions</a></li>
+                  
+              
+                  <li><a href="#prerequisite-2-required-cloud-services-activated">Prerequisite 2: Required Cloud Services Activated</a></li>
+                  
+              
+                  <li><a href="#usage-process">Usage Process</a></li>
+                  
+              
+                  <li><a href="#contact-us">Contact Us</a></li>
+                  
+              
+          
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content theme-github">
+      
+      <div class="content-inner">        
+        
+        <h1 id="automq-for-kafka-byoc-edition-user-guide">AutoMQ for Kafka BYOC Edition User Guide</h1>
+<h2 id="overview">Overview</h2>
+<p>AutoMQ for Kafka BYOC (Bring Your Own Cloud) Edition is a next-generation commercial distribution of Kafka, redesigned and implemented by AutoMQ based on cloud-native infrastructure. It supports private installation and self-management within public cloud VPC (Virtual Private Cloud) environments.</p>
+<p>While maintaining 100% compatibility with Apache Kafka, AutoMQ provides users with over 50% cost savings and 100x elasticity advantages. It also supports second-level partition migration and automatic traffic rebalancing, addressing common operational pain points.</p>
+<p>The AutoMQ for Kafka BYOC Edition utilizes Alibaba Cloud Compute Nest for private deployment, deploying the AutoMQ Kafka software into user-defined VPCs and subnets. Subsequent access to the service remains entirely within the user's private network.</p>
+<p>AutoMQ for Kafka also offers a fully managed SaaS version. For more details, please refer to the <a href="https://automq.com/">AutoMQ Official Website</a>.</p>
+<h2 id="billing-information">Billing Information</h2>
+<p>Since the AutoMQ for Kafka BYOC Edition deploys software on resource instances under the user's account, users are required to pay for the following resources:</p>
+<p><strong>Cloud Resource Costs (Paid directly to Alibaba Cloud)</strong></p>
+<p>The underlying paid cloud resources mainly include:
+- <strong>ECS Instances</strong>: AutoMQ Kafka requires ECS instances to deploy the control plane and Kafka cluster data nodes.
+- <strong>EBS Disks</strong>: AutoMQ Kafka requires a small amount of cloud disk storage for server logs and basic metadata.
+- <strong>OSS Storage</strong>: AutoMQ Kafka uses OSS (Object Storage Service) to store message data, which incurs costs for OSS storage space and API calls.
+- <strong>Public Network Fees (Optional)</strong>: If users choose to access the console and services via the public internet, public network traffic fees may apply.</p>
+<p><strong>Software Service Fees (Paid to AutoMQ)</strong></p>
+<p>AutoMQ Kafka provides commercial BYOC services to enterprise customers. Therefore, software service fees are charged based on the usage volume of the user's cluster. For detailed billing information, please refer to the <a href="https://docs.automq.com/zh/automq-cloud/subscriptions-and-billings/byoc-env-billings/billing-instructions-for-byoc">documentation</a>.</p>
+<p>The current billing methods for the BYOC Edition include:
+- Pay-As-You-Go (billed hourly) and Subscription (billed by License specification).
+- Billing Metric: Based on the cluster's AKU (AutoMQ Kafka Unit) processing specification.</p>
+<p><strong>Important</strong>: AutoMQ Kafka BYOC Edition only charges for actually created clusters. No fees are incurred when simply activating the Kafka service; billing based on the cluster's AKU specification begins only when an instance (cluster) is created in the AutoMQ Kafka console.</p>
+<p>Currently, AutoMQ Kafka BYOC Edition supports deployment on the following ECS instance specifications:</p>
+<table>
+<thead>
+<tr>
+<th>Instance Family</th>
+<th>vCPU &amp; Memory</th>
+<th>System Disk</th>
+<th>Public Bandwidth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ecs.r7.large</td>
+<td>Memory-optimized r7, 2 vCPU, 16 GiB</td>
+<td>ESSD Cloud Disk 40 GiB PL0</td>
+<td>Customizable as needed</td>
+</tr>
+<tr>
+<td>ecs.r6.large</td>
+<td>Memory-optimized r6, 2 vCPU, 16 GiB</td>
+<td>ESSD Cloud Disk 40 GiB PL0</td>
+<td>Customizable as needed</td>
+</tr>
+<tr>
+<td>ecs.u1-c1m8.large</td>
+<td>General Purpose u1, 2 vCPU, 16 GiB</td>
+<td>ESSD Cloud Disk 40 GiB PL0</td>
+<td>Customizable as needed</td>
+</tr>
+</tbody>
+</table>
+<p>For additional specifications or other services (such as high availability requirements for clusters, enterprise-level support services, etc.), please <a href="https://automq.com/">contact us</a>.</p>
+<h2 id="deployment-architecture">Deployment Architecture</h2>
+<h2 id="prerequisite-1-cloud-account-permissions">Prerequisite 1: Cloud Account Permissions</h2>
+<p>To activate and use the AutoMQ Kafka BYOC Edition service, the operating cloud account must have the following permissions:
+1. Create authorization policies and roles.
+2. Activate products from the Cloud Marketplace.</p>
+<p>It is generally recommended to use the primary account or a subordinate account with administrative privileges for these operations.</p>
+<h2 id="prerequisite-2-required-cloud-services-activated">Prerequisite 2: Required Cloud Services Activated</h2>
+<p>The AutoMQ Kafka BYOC Edition depends on the following cloud products. It is recommended to activate them in advance:
+1. <a href="https://ecs.console.aliyun.com">Elastic Compute Service (ECS)</a>.
+2. <a href="https://oss.console.aliyun.com">Object Storage Service (OSS)</a>.
+3. <a href="https://dnsnext.console.aliyun.com">PrivateZone</a>.</p>
+<h2 id="usage-process">Usage Process</h2>
+<p>Once the prerequisites above are met, subscribe to the AutoMQ Kafka BYOC Edition service.</p>
+<p>After activation, please visit the <a href="https://docs.automq.com/zh/automq-cloud/getting-started/install-byoc-environment/alibaba-cloud">AutoMQ BYOC Edition Documentation Center</a> for detailed usage processes and operational instructions.</p>
+<h2 id="contact-us">Contact Us</h2>
+<p>Welcome to contact us through the following channels for more information.</p>
+<p>💻 Official Website: https://www.automq.com</p>
+<p>💻 Documentation Center: https://www.automq.com/docs</p>
+<p>🌟 GitHub: https://github.com/AutoMQ/automq</p>
+<p>👀 Bilibili: AutoMQ Official Account</p>
+<p>🔍 WeChat QR Code:</p>
+<p><img alt="QR Code" src="../qrcode.png" /></p>
+        
+      </div>
+
+      <div class="copyrights">© 2009-2022 Aliyun.com 版权所有</div>
+    </div>
+  </div>
+  
+  <!--
+  MkDocs version      : 1.6.1
+  Docs Build Date UTC : 2026-04-10 08:10:36.062725+00:00
+  -->
+</body>
+</html>
